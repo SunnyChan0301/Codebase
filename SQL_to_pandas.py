@@ -53,6 +53,26 @@ airport_freq['class'] =   np.where(airport_freq['description'].isna(), 'Bad',
                           np.where(np.ceil(airport_freq['frequency_mhz']).between(100,200), 'Good', 'Great')))
 
 
+## Left join 
+airport_freq.merge(airports,how='left',left_on=['id','airport_ident','type'],right_on=['id','ident','type'])
+
+## sqlite3
+import pandas as pd
+import sqlite3
+
+airport_freq = pd.read_csv('data/airport-frequencies.csv')
+conn = sqlite3.connect('test.db')  #建立資料庫
+cursor = conn.cursor()
+cursor.execute('CREATE TABLE airport_freq(id, airport_ref, airport_ident, type, description,frequency_mhz)')  #建立資料表
+conn.commit()
+
+airport_freq.to_sql('airport_freq', conn, if_exists='replace', index=False) 
+
+pd.read_sql("""
+select count(id)
+,max(frequency_mhz)
+from airport_freq
+""", conn)
 
 
 
