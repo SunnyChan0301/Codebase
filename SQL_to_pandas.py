@@ -82,5 +82,5 @@ pysqldf(q)
 
 
 
-
+row_number()over(partition by cust_num,subr_num order by xxxx desc)
 
