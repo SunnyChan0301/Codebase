@@ -68,15 +68,18 @@ conn.commit()
 
 airport_freq.to_sql('airport_freq', conn, if_exists='replace', index=False) 
 
+## Pandsql
 pd.read_sql("""
 select count(id)
 ,max(frequency_mhz)
 from airport_freq
 """, conn)
 
+from pandasql import sqldf
+pysqldf = lambda q: sqldf(q, globals())
 
-
-
+q = """select * from airports limit 5"""
+pysqldf(q)
 
 
 
