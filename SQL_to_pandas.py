@@ -17,5 +17,48 @@ airports[airports.iso_country == 'US'].groupby('type')\
 airport_freq.groupby(['type','description']).agg({'frequency_mhz':'max'}).reset_index()
 airport_freq[airport_freq['airport_ident']=='01FL'].groupby(['type','description']).agg({'frequency_mhz':'max'}).reset_index()
 
-## 
+## distinct count
+airport_freq[['type','description']].drop_duplicates().shape
+
+## rename
+airport_freq.rename(columns={'type': 'type2'})
+
+## Concat Col and fill na
+airport_freq['type']=airport_freq['type'].fillna('')
+airport_freq['description']=airport_freq['description'].fillna('')
+airport_freq['new']=airport_freq['type']+'-'+airport_freq['description']
+airport_freq['new']=airport_freq[['type','description']].apply("-".join, axis=1)
+
+## Cast astype
+airport_freq = airport_freq.astype({"type":"string","description":"string"})
+
+## NP Ceil 
+airport_freq['frequency_mhz']=np.int16(np.ceil(airport_freq['frequency_mhz']))
+
+## Case when
+# np.select
+conditions=[
+    (airport_freq['type']=='CTAF') & (airport_freq['airport_ident']=='00CA'),
+    airport_freq['frequency_mhz'].between(100,200),
+    np.ceil(airport_freq['frequency_mhz']).between(100,200)
+]
+value=['500','AAA','BBB']
+airport_freq['casewhen']=np.select(conditions, value, default=np.nan)
+# np.where
+airport_freq['casewhen']=np.where(airport_freq['airport_ident']=='00CA',500,100)
+airport_freq['casewhen']=np.where((airport_freq['type']=='CTAF') & (airport_freq['airport_ident']=='00CA'),500,100)
+# np.where2
+airport_freq['class'] =   np.where(airport_freq['description'].isna(), 'Bad',
+                          np.where((airport_freq['type']=='CTAF') & (airport_freq['airport_ident']=='00CA'), 'OK',
+                          np.where(np.ceil(airport_freq['frequency_mhz']).between(100,200), 'Good', 'Great')))
+
+
+
+
+
+
+
+
+
+
 
