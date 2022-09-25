@@ -67,14 +67,13 @@ cursor.execute('CREATE TABLE airport_freq(id, airport_ref, airport_ident, type, 
 conn.commit()
 
 airport_freq.to_sql('airport_freq', conn, if_exists='replace', index=False) 
-
-## Pandsql
 pd.read_sql("""
 select count(id)
 ,max(frequency_mhz)
 from airport_freq
 """, conn)
 
+## Pandsql
 from pandasql import sqldf
 pysqldf = lambda q: sqldf(q, globals())
 
