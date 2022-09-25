@@ -59,6 +59,19 @@ print(f'Mean absolute error: {mae:.2f}')
 print(f'Mean squared error: {mse:.2f}')
 print(f'Root mean squared error: {rmse:.2f}')
 
+###### Shap value
+import shap
+explainer = shap.Explainer(rf)
+X_shap=X.sample(n=200)
+shap.plots.beeswarm(shap_values)
+shap.summary_plot(shap_values,plot_type='bar')
+
+
+###### Sklearn confusion matrix
+from sklearn.metrics import plot_confusion_matrix
+plot_confusion_matrix(clf, X_test, y_test)  
+plt.show()
+
 
 
 
